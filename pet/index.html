@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ペット供養のご案内 | 日蓮宗 今島山 唱行寺</title>
+    <meta name="description" content="大切な家族であるペットの供養。千葉県市川市の唱行寺では、納骨、読経、塔婆供養を真心を込めて執り行います。365日お参り可能な専用の合祀墓。">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wisteria-light: #f3f0ff;
+            --wisteria-soft: #e9d5ff;
+            --wisteria-main: #a891d9;
+            --wisteria-deep: #6b4c9a;
+            --text-main: #2d263d;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fdfbff 0%, #f3f0ff 100%);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .serif { font-family: 'Noto Serif JP', serif; }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(168, 145, 217, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* 修正：オリジナルのボタンアニメーションを完全復元 */
+        .btn-hover {
+            transition: all 0.4s ease;
+            position: relative;
+            background: white;
+            color: var(--wisteria-deep);
+            border: 1px solid var(--wisteria-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            background: var(--wisteria-main);
+            color: white !important;
+            box-shadow: 0 10px 20px rgba(168, 145, 217, 0.3);
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--text-main);
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover { color: var(--wisteria-deep); }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--wisteria-main);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #hero-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .tab-content { display: block; animation: fadeIn 1.2s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+
+<body>
+    <canvas id="hero-canvas"></canvas>
+
+    <nav class="glass-nav fixed top-0 w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center">
+        <a href="/" class="flex items-center space-x-3">
+            <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-10 md:h-12 mix-blend-multiply">
+            <div class="leading-tight">
+                <span class="block text-lg md:text-xl font-bold tracking-widest serif">日蓮宗 今島山 唱行寺</span>
+                <span class="block text-xs tracking-widest opacity-60">Nichirenshu Kontouzan Shogyoji</span>
+            </div>
+        </a>
+        <div class="hidden lg:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link">トップ</a>
+            <a href="/news/" class="nav-link">お知らせ</a>
+            <a href="/history/" class="nav-link">歴史</a>
+            <a href="/access/" class="nav-link">アクセス</a>
+            <a href="/event/" class="nav-link">年間行事</a>
+            <a href="/contact/" class="nav-link px-6 py-2 border border-purple-300 rounded-full hover:bg-purple-50 transition">お問い合わせ</a>
+        </div>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニューを開く"
+            class="lg:hidden text-2xl text-wisteria-deep relative z-50"><i class="fas fa-bars"></i></button>
+        <div id="mobile-menu"
+            class="hidden lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md border-t border-purple-100 shadow-lg flex-col text-center text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link block px-6 py-4 border-b border-purple-50">トップ</a>
+            <a href="/news/" class="nav-link block px-6 py-4 border-b border-purple-50">お知らせ</a>
+            <a href="/history/" class="nav-link block px-6 py-4 border-b border-purple-50">歴史</a>
+            <a href="/access/" class="nav-link block px-6 py-4 border-b border-purple-50">アクセス</a>
+            <a href="/event/" class="nav-link block px-6 py-4 border-b border-purple-50">年間行事</a>
+            <a href="/contact/" class="nav-link block px-6 py-4 text-wisteria-deep font-bold">お問い合わせ</a>
+        </div>
+    </nav>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.querySelector('#mobile-menu-btn i');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+    </script>
+
+    <main class="pt-24 min-h-screen">
+        <section id="page-pet" class="tab-content px-6 md:px-12 py-12 max-w-5xl mx-auto">
+            <h2 class="text-4xl serif mb-12 border-l-8 border-purple-300 pl-6 fade-in-up">ペット供養のご案内</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+                <div class="fade-in-up">
+                    <p class="text-lg leading-relaxed text-gray-700 mb-8 serif">
+                        共に時を過ごした大切な家族であるペットたち。<br>
+                        言葉は通じずとも、心を通わせた愛しい存在が安らかに眠れるよう、唱行寺が真心を込めて読経・供養いたします。
+                    </p>
+                    <div class="glass-card p-6 bg-white/40 border-l-4 border-purple-300">
+                        <p class="text-sm text-gray-600 leading-loose">
+                            当山では、御遺骨を麻袋に入れて埋葬いたします。時を経ることで自然に還り、静かな安らぎへと導かれます。
+                        </p>
+                    </div>
+                </div>
+                <div class="fade-in-up glass-card p-3 shadow-xl">
+                    <img src="https://i.ibb.co/G335XSS5/image.jpg" alt="ペット供養イメージ" class="rounded-xl w-full h-80 object-cover">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <div class="fade-in-up glass-card p-8 hover:bg-white/60 transition shadow-sm">
+                    <h4 class="text-xl serif font-bold mb-4 text-wisteria-deep flex items-center">
+                        <i class="fas fa-box-open mr-3 text-purple-400"></i>納骨
+                    </h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        「御遺骨お預かり・埋葬」または「ご家族立ち会い・埋葬」のいずれかをお選びいただけます。
+                    </p>
+                </div>
+                <div class="fade-in-up glass-card p-8 hover:bg-white/60 transition shadow-sm" style="transition-delay: 0.1s">
+                    <h4 class="text-xl serif font-bold mb-4 text-wisteria-deep flex items-center">
+                        <i class="fas fa-scroll mr-3 text-purple-400"></i>読経
+                    </h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        墓前供養を執り行います。お経の響きとともに、感謝の気持ちを届けます。
+                    </p>
+                </div>
+                <div class="fade-in-up glass-card p-8 hover:bg-white/60 transition shadow-sm" style="transition-delay: 0.2s">
+                    <h4 class="text-xl serif font-bold mb-4 text-wisteria-deep flex items-center">
+                        <i class="fas fa-envelope-open-text mr-3 text-purple-400"></i>塔婆
+                    </h4>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        亡きペットへのお手紙代わりになる供養です。一本一本丁寧にお作りします。
+                    </p>
+                </div>
+            </div>
+
+            <div class="fade-in-up glass-card overflow-hidden shadow-xl mb-16">
+                <div class="bg-wisteria-main py-4 px-8 text-white font-bold tracking-widest serif">
+                    ご志納金（目安）
+                </div>
+                <div class="p-8 md:p-12 bg-white/40">
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center border-b border-purple-100 pb-4">
+                            <span class="serif text-lg">墓地使用料</span>
+                            <span class="text-xl font-bold text-wisteria-deep">50,000円〜</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-purple-100 pb-4">
+                            <span class="serif text-lg">読経・納骨料</span>
+                            <span class="text-xl font-bold text-wisteria-deep">30,000円</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-purple-100 pb-4">
+                            <span class="serif text-lg">塔婆代金（1本）</span>
+                            <span class="text-xl font-bold text-wisteria-deep">4,000円</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-purple-50/50 p-6 rounded-2xl border border-purple-100">
+                            <h5 class="font-bold text-wisteria-deep mb-3 text-sm flex items-center">
+                                <i class="fas fa-leaf mr-2"></i>お供え物の手配
+                            </h5>
+                            <p class="text-sm text-gray-600 mb-2">当日、お花とお線香をご用意ください。お寺での手配も承っております。</p>
+                            <div class="flex gap-4 mt-3">
+                                <span class="bg-white px-3 py-1 rounded-full text-xs font-bold border border-purple-100">生け花：3,300円</span>
+                                <span class="bg-white px-3 py-1 rounded-full text-xs font-bold border border-purple-100">線香：100円</span>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <p class="text-sm text-gray-500 flex items-start">
+                                <i class="fas fa-info-circle mr-2 mt-1 text-purple-300"></i>
+                                お墓参りは、365日ご自由にしていただけます。
+                            </p>
+                            <p class="text-sm text-gray-500 flex items-start">
+                                <i class="fas fa-info-circle mr-2 mt-1 text-purple-300"></i>
+                                埋葬以降の墓前供養、塔婆供養はお電話でお申し込みください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fade-in-up glass-card p-10 text-center bg-white/60 border-t-4 border-wisteria-main shadow-2xl">
+                <h3 class="text-2xl serif mb-6 text-wisteria-deep">ペット供養のお申し込み・ご相談</h3>
+                <div class="flex flex-col md:flex-row justify-center gap-6">
+                    <a href="tel:0473391445" class="btn-hover px-10 py-4 rounded-full text-lg font-bold shadow-sm">
+                        <i class="fas fa-phone-alt mr-3"></i>047-339-1445
+                    </a>
+                </div>
+                <p class="mt-6 text-xs text-gray-400 tracking-widest">受付時間：8:00 〜 17:00</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white/60 backdrop-blur-md mt-24 pt-20 pb-10 px-6 md:px-12 border-t border-purple-100">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div class="col-span-1 md:col-span-2 space-y-8">
+                <div class="flex items-center space-x-4">
+                    <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-12 mix-blend-multiply">
+                    <span class="text-2xl serif font-bold tracking-widest text-wisteria-deep">唱行寺</span>
+                </div>
+                <div class="text-gray-500 leading-relaxed font-medium">
+                    <p>〒272-0802 千葉県市川市柏井町1丁目1696</p>
+                    <p><span class="text-wisteria-deep">TEL: 047-339-1445</span></p>
+                    <p><span class="text-wisteria-deep">FAX: 047-339-1459</span></p>
+                </div>
+                <div class="flex space-x-6 text-3xl text-purple-300">
+                    <a href="https://www.instagram.com/shougyougi_1254nen?igsh=MWptZTk3eGJpNW5rcg==" target="_blank" rel="noopener noreferrer" class="hover:text-purple-600 transition-all duration-300 inline-block hover:scale-110"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-purple-600 transition hover:scale-110"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">メニュー</h4>
+                <ul class="space-y-4 text-gray-500 font-medium">
+                    <li><a href="/" class="hover:text-purple-600 transition">トップ</a></li>
+                    <li><a href="/news/" class="hover:text-purple-600 transition">お知らせ</a></li>
+                    <li><a href="/history/" class="hover:text-purple-600 transition">歴史</a></li>
+                    <li><a href="/access/" class="hover:text-purple-600 transition">アクセス</a></li>
+                    <li><a href="/event/" class="hover:text-purple-600 transition">年中行事予定</a></li>
+                    <li><a href="/engie/" class="hover:text-purple-600 transition">縁起</a></li>
+                    <li><a href="/pet/" class="hover:text-purple-600 transition">ペット供養のご案内</a></li>
+                    <li><a href="/privacy/" class="hover:text-purple-600 transition">個人情報保護方針</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">アクセス</h4>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 font-medium">JR船橋法典駅 徒歩15分<br>無料駐車場完備（30台）</p>
+                <a href="/access/" class="text-purple-600 font-bold border-b border-purple-200 hover:border-purple-600 transition pb-1">地図を確認する</a>
+            </div>
+        </div>
+        <div class="text-center text-xs text-purple-300 tracking-widest border-t border-purple-50 pt-10">© 2026 Nichirenshu Kontouzan Shogyoji.</div>
+    </footer>
+
+    <script>
+        // 共通：フェードイン制御
+        function checkFadeIn() {
+            const elements = document.querySelectorAll('.fade-in-up');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            elements.forEach(el => observer.observe(el));
+        }
+        window.addEventListener('DOMContentLoaded', checkFadeIn);
+
+        // 背景：Three.js アニメーション (オリジナルを完全再現)
+        let scene, camera, renderer, petals = [];
+        const petalCount = 80;
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            const petalShape = new THREE.Shape();
+            petalShape.moveTo(0, 0);
+            petalShape.bezierCurveTo(0.08, 0.08, 0.12, 0.25, 0, 0.4);
+            petalShape.bezierCurveTo(-0.12, 0.25, -0.08, 0.08, 0, 0);
+
+            const petalGeometry = new THREE.ShapeGeometry(petalShape);
+            const petalMaterial = new THREE.MeshBasicMaterial({ color: 0xd8b4fe, transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+
+            for (let i = 0; i < petalCount; i++) {
+                const petal = new THREE.Mesh(petalGeometry, petalMaterial);
+                resetPetal(petal);
+                petal.position.y = Math.random() * 10 - 5;
+                scene.add(petal);
+                petals.push(petal);
+            }
+            camera.position.z = 5;
+            animateThree();
+        }
+
+        function resetPetal(petal) {
+            petal.position.x = (Math.random() - 0.5) * 12;
+            petal.position.y = 6 + Math.random() * 5;
+            petal.position.z = (Math.random() - 0.5) * 8;
+            petal.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+            petal.userData.speed = 0.003 + Math.random() * 0.008;
+            petal.userData.rotSpeed = (Math.random() - 0.5) * 0.008;
+            petal.userData.drift = (Math.random() - 0.5) * 0.004;
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            petals.forEach(petal => {
+                petal.position.y -= petal.userData.speed;
+                petal.position.x += petal.userData.drift + Math.sin(petal.position.y * 0.3) * 0.002;
+                petal.rotation.x += petal.userData.rotSpeed;
+                petal.rotation.y += petal.userData.rotSpeed;
+                if (petal.position.y < -6) resetPetal(petal);
+            });
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        initThree();
+    </script>
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歴史 | 日蓮宗 今島山 唱行寺</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* オリジナルのCSSを完全継承 */
+        :root {
+            --wisteria-light: #f3f0ff;
+            --wisteria-soft: #e9d5ff;
+            --wisteria-main: #a891d9;
+            --wisteria-deep: #6b4c9a;
+            --text-main: #2d263d;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fdfbff 0%, #f3f0ff 100%);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .serif {
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(168, 145, 217, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #hero-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--text-main);
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--wisteria-deep);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--wisteria-main);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .tab-content {
+            display: block;
+            animation: fadeIn 1.2s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="hero-canvas"></canvas>
+
+    <nav class="glass-nav fixed top-0 w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center">
+        <a href="/" class="flex items-center space-x-3">
+            <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-10 md:h-12 mix-blend-multiply">
+            <div class="leading-tight">
+                <span class="block text-lg md:text-xl font-bold tracking-widest serif">日蓮宗 今島山 唱行寺</span>
+                <span class="block text-xs tracking-widest opacity-60">Nichirenshu Kontouzan Shogyoji</span>
+            </div>
+        </a>
+        <div class="hidden lg:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link">トップ</a>
+            <a href="/news/" class="nav-link">お知らせ</a>
+            <a href="/history/" class="nav-link">歴史</a>
+            <a href="/access/" class="nav-link">アクセス</a>
+            <a href="/events/" class="nav-link">年間行事</a>
+            <a href="/contact/"
+                class="nav-link px-6 py-2 border border-purple-300 rounded-full hover:bg-purple-50 transition">お問い合わせ</a>
+        </div>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニューを開く"
+            class="lg:hidden text-2xl text-wisteria-deep relative z-50"><i class="fas fa-bars"></i></button>
+        <div id="mobile-menu"
+            class="hidden lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md border-t border-purple-100 shadow-lg flex-col text-center text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link block px-6 py-4 border-b border-purple-50">トップ</a>
+            <a href="/news/" class="nav-link block px-6 py-4 border-b border-purple-50">お知らせ</a>
+            <a href="/history/" class="nav-link block px-6 py-4 border-b border-purple-50">歴史</a>
+            <a href="/access/" class="nav-link block px-6 py-4 border-b border-purple-50">アクセス</a>
+            <a href="/events/" class="nav-link block px-6 py-4 border-b border-purple-50">年間行事</a>
+            <a href="/contact/" class="nav-link block px-6 py-4 text-wisteria-deep font-bold">お問い合わせ</a>
+        </div>
+    </nav>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.querySelector('#mobile-menu-btn i');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+    </script>
+
+    <main class="pt-24 min-h-screen">
+        <section id="page-history" class="tab-content px-6 md:px-12 py-12 max-w-5xl mx-auto">
+            <h2 class="text-4xl serif mb-16 text-center fade-in-up">唱行寺の歩み</h2>
+            <div class="fade-in-up glass-card p-10 mb-16 text-gray-700 leading-relaxed">
+                <p class="mb-6">千葉県市川市柏井町にある今島山唱行寺（しょうぎょうじ）は、1254年開山の歴史ある日蓮宗寺院です。<br>題目唱行に初めて太鼓を用いたことから「太鼓の霊場」として知られ、市川市指定文化財の木造日蓮聖人坐像や、忠臣蔵ゆかりの梶川与惣兵衛の遺品があります。 </p>
+            </div>
+            <div class="relative">
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-purple-200"></div>
+                <div class="space-y-24">
+                    <div class="fade-in-up relative flex items-center justify-between w-full">
+                        <div class="w-5/12 text-right pr-12">
+                            <h4 class="text-2xl serif font-bold text-wisteria-deep">創建：応永年間</h4>
+                            <p class="text-purple-400 font-bold mb-2">1254年 〜</p>
+                            <p class="text-sm text-gray-600">首題房日唱によって開かれたと伝えられています。</p>
+                        </div>
+                        <div class="z-10 bg-white border-4 border-purple-300 w-6 h-6 rounded-full shadow-lg"></div>
+                        <div class="w-5/12"></div>
+                    </div>
+                    <div class="fade-in-up relative flex items-center justify-between w-full">
+                        <div class="w-5/12"></div>
+                        <div class="z-10 bg-white border-4 border-purple-300 w-6 h-6 rounded-full shadow-lg"></div>
+                        <div class="w-5/12 pl-12">
+                            <h4 class="text-2xl serif font-bold text-wisteria-deep">日蓮大聖人との縁</h4>
+                            <p class="text-purple-400 font-bold mb-2">教化と開堂</p>
+                            <p class="text-sm text-gray-600">日蓮大聖人がこの地に立ち寄り、鐘阿弥を教化。日唱の法号を授与し、開堂供養を行ったのが縁起です。</p>
+                        </div>
+                    </div>
+                    <div class="fade-in-up relative flex items-center justify-between w-full">
+                        <div class="w-5/12 text-right pr-12">
+                            <h4 class="text-2xl serif font-bold text-wisteria-deep">太鼓の許し</h4>
+                            <p class="text-purple-400 font-bold mb-2">太鼓の霊場の由来</p>
+                            <p class="text-sm text-gray-600">大聖人が「太鼓を打つように」と薦めたことが、「太鼓の霊場」と呼ばれる由縁となりました。</p>
+                        </div>
+                        <div class="z-10 bg-white border-4 border-purple-300 w-6 h-6 rounded-full shadow-lg"></div>
+                        <div class="w-5/12"></div>
+                    </div>
+                    <div class="fade-in-up relative flex items-center justify-between w-full">
+                        <div class="w-5/12"></div>
+                        <div class="z-10 bg-purple-500 border-4 border-white w-8 h-8 rounded-full shadow-xl"></div>
+                        <div class="w-5/12 pl-12">
+                            <h4 class="text-2xl serif font-bold text-wisteria-deep">現代</h4>
+                            <p class="text-purple-400 font-bold mb-2">令和の唱行寺</p>
+                            <p class="text-sm text-gray-600">第五十四世 加藤英晋住職のもと、藤の花が咲き誇る開かれたお寺として歩み続けています。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <br>
+        <br>
+        <br>
+
+        <section>
+            <h2 class="text-4xl serif mb-16 text-center fade-in-up">境内をお散歩</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl mx-auto mt-20 px-6 md:px-12">
+                <div class="fade-in-up glass-card p-4 overflow-hidden group">
+                    <div class="overflow-hidden rounded-xl h-96">
+                        <img src="https://i.ibb.co/yF9hTFzh/kashiwai-shogyo2.jpg" alt="本堂"
+                            class="w-full h-full object-cover transition duration-1000 group-hover:scale-105">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="serif text-3xl mb-3 text-wisteria-deep text-center">本堂</h3>
+                        <p class="opacity-70 leading-relaxed">日蓮大聖人ゆかりの「太鼓の霊場」として、題目の響きが絶えない神聖な空間です。</p>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-4 overflow-hidden group" style="transition-delay: 0.2s">
+                    <div class="overflow-hidden rounded-xl h-96">
+                        <img src="https://i.ibb.co/5gndzNL6/kashiwai-shogyo3.jpg" alt="鐘楼"
+                            class="w-full h-full object-cover transition duration-1000 group-hover:scale-105">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="serif text-3xl mb-3 text-wisteria-deep text-center">鐘楼</h3>
+                        <p class="opacity-70 leading-relaxed">夕暮れ時に響き渡る鐘の音は、市川の街を穏やかに包み込み、人々の心を癒します。</p>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-4 overflow-hidden group" style="transition-delay: 0.2s">
+                    <div class="overflow-hidden rounded-xl h-96">
+                        <img src="https://i.ibb.co/0RpjJTPB/S-54329350.jpg" alt="竹林"
+                            class="w-full h-full object-cover transition duration-1000 group-hover:scale-105">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="serif text-3xl mb-3 text-wisteria-deep text-center">竹林</h3>
+                        <p class="opacity-70 leading-relaxed">境内の奥に広がる静謐な竹林。陽光が優しく差し込むは癒やし、凛とした空気に包まれ、風に揺れる笹の音に耳を澄ませば、都会の喧騒を忘れる安らぎのひとときが流れます。</p>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-4 overflow-hidden group" style="transition-delay: 0.2s">
+                    <div class="overflow-hidden rounded-xl h-96">
+                        <img src="https://i.ibb.co/Q7YfJF5P/S-54435843.jpg" alt="本堂"
+                            class="w-full h-full object-cover transition duration-1000 group-hover:scale-105">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="serif text-3xl mb-3 text-wisteria-deep text-center">本堂</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="py-24 bg-white/30 backdrop-blur-sm border-y border-purple-100 mt-20">
+    <div class="max-w-6xl mx-auto px-6">
+        
+        <div class="text-center mb-16 fade-in-up">
+            <span class="text-purple-400 font-bold tracking-[0.3em] text-sm mb-4 block">市川市指定有形文化財</span>
+            <h2 class="serif text-4xl md:text-5xl text-wisteria-deep">木彫日蓮坐像<br>（もくちょうにちれんざぞう）</h2>
+            <div class="w-20 h-1 bg-purple-200 mx-auto mt-8"></div>
+        </div>
+
+        <div class="fade-in-up glass-card p-2 md:p-4 shadow-2xl mb-16 group">
+            <div class="relative overflow-hidden rounded-xl">
+                <img src="https://i.ibb.co/x8wY3tbX/S-54435845.jpg" alt="ご本尊 木彫日蓮坐像" 
+                    class="w-full h-full object-cover transition duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent"></div>
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto fade-in-up">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
+                
+                <div class="md:col-span-1 space-y-6 border-l-2 border-purple-100 pl-8 py-2">
+                    <div>
+                        <p class="text-xs text-purple-400 font-bold mb-1">製作年代</p>
+                        <p class="serif text-lg">室町時代以前（推定）</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-purple-400 font-bold mb-1">造形様式</p>
+                        <p class="serif text-lg">寄木造・玉眼</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-purple-400 font-bold mb-1">伝承作者</p>
+                        <p class="serif text-lg">日法上人（日蓮聖人直弟子）</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2">
+                    <p class="serif text-xl leading-loose text-gray-700">
+                        ご本尊の木彫日蓮坐像は、寄木造に玉眼を施した重厚な肖像彫刻です。製作は室町時代以前と推定され、像内には明応8年（1499年）の修理記録が残る歴史ある一尊です。
+                    </p>
+                    <p class="serif text-xl leading-loose text-gray-700 mt-6">
+                        作者は聖人の弟子・日法と伝えられ、東京・池上本門寺にある像の形式を正統に継承しています。簡素な彫りの中に、どっしりと心に響く重みを感じさせる当山の至宝です。
+                    </p>
+                </div>
+<div class="md:col-span-3 mt-16 pt-16 border-t border-purple-100">
+                    <div class="max-w-3xl mx-auto space-y-12">
+                        
+                        <div class="fade-in-up">
+                            <h4 class="serif text-2xl text-wisteria-deep mb-6 flex items-center">
+                                <span class="w-8 h-[1px] bg-purple-300 mr-4"></span>
+                                唱行寺の起こりと「今島田」
+                            </h4>
+                            <p class="serif text-lg leading-loose text-gray-700">
+                                唱行寺が建つこの地域は、かつて「今島田」と呼ばれていました。建長６年（1254）、この地にいた念仏僧・鐘阿彌が日蓮聖人に帰依して改宗。日蓮より「主題坊日唱」の法号を戴いて建立したのが、今島山唱行寺の始まりと伝えられています。
+                            </p>
+                        </div>
+
+                        <div class="fade-in-up">
+                            <h4 class="serif text-2xl text-wisteria-deep mb-6 flex items-center">
+                                <span class="w-8 h-[1px] bg-purple-300 mr-4"></span>
+                                「太鼓の霊場」と鐘鼓塚
+                            </h4>
+                            <p class="serif text-lg leading-loose text-gray-700">
+                                日唱は、それまで使用していた鐘鼓を捨て、日蓮の許しを得て題目唱行に初めて「太鼓」を用いました。そのため当時は「太鼓の霊場」と呼ばれ、捨てた鐘鼓を埋めた場所は今も「鐘鼓塚」として境内に残されています。
+                            </p>
+                        </div>
+
+                        <div class="fade-in-up bg-purple-50/50 p-8 rounded-2xl border border-purple-100">
+                            <h4 class="serif text-2xl text-wisteria-deep mb-6">木彫日蓮坐像の価値</h4>
+                            <p class="serif text-lg leading-loose text-gray-700">
+                                当寺の祖師像は、日蓮の弟子・日法の作と伝わります。総高38cm、寄木造りに玉目を施した本格的な肖像彫刻であり、昭和36年9月18日に「市川市有形文化財」の指定を受けました。明応・元禄・昭和、そして平成と、時代ごとの解体修理を経て、その尊い姿を今に伝えています。
+                            </p>
+                        </div>
+
+                        <div class="fade-in-up">
+                            <h4 class="serif text-2xl text-wisteria-deep mb-6 flex items-center">
+                                <span class="w-8 h-[1px] bg-purple-300 mr-4"></span>
+                                梶川与惣兵衛と唱行寺
+                            </h4>
+                            <p class="serif text-lg leading-loose text-gray-700">
+                                柏井周辺は、元禄13年（1700）まで「忠臣蔵」で知られる梶川与惣兵衛の知行地でした。境内には与惣兵衛の祖父母の墳墓があるほか、遺品などが寺宝として大切に受け継がれており、歴史の表舞台との深い繋がりを感じさせます。
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+<p>参考：市川市ホームページ</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+    </main>
+
+    <footer class="bg-white/60 backdrop-blur-md mt-24 pt-20 pb-10 px-6 md:px-12 border-t border-purple-100">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div class="col-span-1 md:col-span-2 space-y-8">
+                <div class="flex items-center space-x-4">
+                    <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-12 mix-blend-multiply">
+                    <span class="text-2xl serif font-bold tracking-widest text-wisteria-deep">唱行寺</span>
+                </div>
+                <div class="text-gray-500 leading-relaxed font-medium">
+                    <p>〒272-0802 千葉県市川市柏井町1丁目1696</p>
+                    <p><span class="text-wisteria-deep">TEL: 047-339-1445</span></p>
+                    <p><span class="text-wisteria-deep">FAX: 047-339-1459</span></p>
+                </div>
+                <div class="flex space-x-6 text-3xl text-purple-300">
+                    <a href="https://www.instagram.com/shougyougi_1254nen?igsh=MWptZTk3eGJpNW5rcg==" target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:text-purple-600 transition-all duration-300 inline-block hover:scale-110"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-purple-600 transition hover:scale-110"><i
+                            class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">メニュー</h4>
+                <ul class="space-y-4 text-gray-500 font-medium">
+                    <li><a href="/" class="hover:text-purple-600 transition">トップ</a></li>
+                    <li><a href="/news/" class="hover:text-purple-600 transition">お知らせ</a></li>
+                    <li><a href="/history/" class="hover:text-purple-600 transition">歴史</a></li>
+                    <li><a href="/access/" class="hover:text-purple-600 transition">アクセス</a></li>
+                    <li><a href="/event/" class="hover:text-purple-600 transition">年中行事予定</a></li>
+                    <li><a href="/engi/" class="hover:text-purple-600 transition">縁起</a></li>
+                    <li><a href="/pet/" class="hover:text-purple-600 transition">ペット供養のご案内</a></li>
+                    <li><a href="/privacy/" class="hover:text-purple-600 transition">個人情報保護方針</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">アクセス</h4>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 font-medium">JR船橋法典駅 徒歩15分<br>無料駐車場完備（30台）</p>
+                <a href="/access/"
+                    class="text-purple-600 font-bold border-b border-purple-200 hover:border-purple-600 transition pb-1">地図を確認する</a>
+            </div>
+        </div>
+        <div class="text-center text-xs text-purple-300 tracking-widest border-t border-purple-50 pt-10">© 2026
+            Nichirenshu Kontouzan Shogyoji.</div>
+    </footer>
+
+    <script>
+        /* オリジナルのThree.jsロジック（花びらの形状・サイズ・挙動）を完全再現 */
+        function checkFadeIn() {
+            const elements = document.querySelectorAll('.fade-in-up');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            elements.forEach(el => observer.observe(el));
+        }
+        window.addEventListener('DOMContentLoaded', checkFadeIn);
+
+        let scene, camera, renderer, petals = [];
+        const petalCount = 80;
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // 花びらのサイズ・形状（オリジナルの座標を完全復元）
+            const petalShape = new THREE.Shape();
+            petalShape.moveTo(0, 0);
+            petalShape.bezierCurveTo(0.08, 0.08, 0.12, 0.25, 0, 0.4);
+            petalShape.bezierCurveTo(-0.12, 0.25, -0.08, 0.08, 0, 0);
+
+            const petalGeometry = new THREE.ShapeGeometry(petalShape);
+            const petalMaterial = new THREE.MeshBasicMaterial({ color: 0xd8b4fe, transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+
+            for (let i = 0; i < petalCount; i++) {
+                const petal = new THREE.Mesh(petalGeometry, petalMaterial);
+                resetPetal(petal);
+                petal.position.y = Math.random() * 10 - 5;
+                scene.add(petal);
+                petals.push(petal);
+            }
+            camera.position.z = 5;
+            animateThree();
+        }
+
+        function resetPetal(petal) {
+            petal.position.x = (Math.random() - 0.5) * 12;
+            petal.position.y = 6 + Math.random() * 5;
+            petal.position.z = (Math.random() - 0.5) * 8;
+            petal.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+            petal.userData.speed = 0.003 + Math.random() * 0.008;
+            petal.userData.rotSpeed = (Math.random() - 0.5) * 0.008;
+            petal.userData.drift = (Math.random() - 0.5) * 0.004;
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            petals.forEach(petal => {
+                petal.position.y -= petal.userData.speed;
+                petal.position.x += petal.userData.drift + Math.sin(petal.position.y * 0.3) * 0.002;
+                petal.rotation.x += petal.userData.rotSpeed;
+                petal.rotation.y += petal.userData.rotSpeed;
+                if (petal.position.y < -6) resetPetal(petal);
+            });
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        initThree();
+    </script>
+</body>
+
+</html>

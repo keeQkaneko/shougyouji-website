@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年間行事予定 | 日蓮宗 今島山 唱行寺</title>
+    <meta name="description" content="千葉県市川市の唱行寺、2026年度の年間行事案内。節分祈祷会、春季・秋季彼岸法要、御守護神大祭、施餓鬼法要、お会式など、四季折々の法要儀式についてご案内いたします。">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* オリジナルのCSS定義を完全継承 */
+        :root {
+            --wisteria-light: #f3f0ff;
+            --wisteria-soft: #e9d5ff;
+            --wisteria-main: #a891d9;
+            --wisteria-deep: #6b4c9a;
+            --text-main: #2d263d;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fdfbff 0%, #f3f0ff 100%);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .serif { font-family: 'Noto Serif JP', serif; }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(168, 145, 217, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* 復元：オリジナルのボタンアニメーション */
+        .btn-hover {
+            transition: all 0.4s ease;
+            position: relative;
+            background: white;
+            color: var(--wisteria-deep);
+            border: 1px solid var(--wisteria-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            background: var(--wisteria-main);
+            color: white !important;
+            box-shadow: 0 10px 20px rgba(168, 145, 217, 0.3);
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--text-main);
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover { color: var(--wisteria-deep); }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--wisteria-main);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+
+        #hero-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+        }
+
+        .tab-content { display: block; animation: fadeIn 1.2s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+
+<body>
+    <canvas id="hero-canvas"></canvas>
+
+    <nav class="glass-nav fixed top-0 w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center">
+        <a href="/" class="flex items-center space-x-3">
+            <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-10 md:h-12 mix-blend-multiply">
+            <div class="leading-tight">
+                <span class="block text-lg md:text-xl font-bold tracking-widest serif">日蓮宗 今島山 唱行寺</span>
+                <span class="block text-xs tracking-widest opacity-60">Nichirenshu Kontouzan Shogyoji</span>
+            </div>
+        </a>
+        <div class="hidden lg:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link">トップ</a>
+            <a href="/news/" class="nav-link">お知らせ</a>
+            <a href="/history/" class="nav-link">歴史</a>
+            <a href="/access/" class="nav-link">アクセス</a>
+            <a href="/event/" class="nav-link font-bold text-wisteria-deep">年間行事</a>
+            <a href="/contact/" class="nav-link px-6 py-2 border border-purple-300 rounded-full hover:bg-purple-50 transition">お問い合わせ</a>
+        </div>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニューを開く"
+            class="lg:hidden text-2xl text-wisteria-deep relative z-50"><i class="fas fa-bars"></i></button>
+        <div id="mobile-menu"
+            class="hidden lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md border-t border-purple-100 shadow-lg flex-col text-center text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link block px-6 py-4 border-b border-purple-50">トップ</a>
+            <a href="/news/" class="nav-link block px-6 py-4 border-b border-purple-50">お知らせ</a>
+            <a href="/history/" class="nav-link block px-6 py-4 border-b border-purple-50">歴史</a>
+            <a href="/access/" class="nav-link block px-6 py-4 border-b border-purple-50">アクセス</a>
+            <a href="/event/" class="nav-link block px-6 py-4 border-b border-purple-50 font-bold text-wisteria-deep">年間行事</a>
+            <a href="/contact/" class="nav-link block px-6 py-4 text-wisteria-deep font-bold">お問い合わせ</a>
+        </div>
+    </nav>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.querySelector('#mobile-menu-btn i');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+    </script>
+
+    <main class="pt-24 min-h-screen">
+        <section id="page-event" class="tab-content px-6 md:px-12 py-12 max-w-5xl mx-auto">
+            <h2 class="text-4xl serif mb-12 border-l-8 border-purple-300 pl-6 fade-in-up">2026年行事予定</h2>
+            <div class="grid grid-cols-1 gap-6">
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">Feb</span>
+                            <span class="block text-3xl">3</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">節分祈祷会</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>2月3日（火） 14：00 〜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">Mar</span>
+                            <span class="block text-3xl">23</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">春季彼岸法要会</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>3月23日（月） 14：00 〜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">May</span>
+                            <span class="block text-3xl">12</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">御守護神大祭</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>5月12日（火） 11：00 〜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">Aug</span>
+                            <span class="block text-3xl">1</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">新盆会</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>8月1日（土） 11：00 〜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">Aug</span>
+                            <span class="block text-3xl">17</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">施餓鬼法要会</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>8月17日（月） 14：00 〜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">Sep</span>
+                            <span class="block text-3xl">26</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">秋季彼岸法要会</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>9月26日（土） 14：00 〜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">Nov</span>
+                            <span class="block text-3xl">14</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">お会式</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>11月14日（土） 14：00 〜</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fade-in-up glass-card p-8 flex justify-between items-center hover:bg-white/80 transition group shadow-sm">
+                    <div class="flex items-center gap-10">
+                        <div class="text-center w-24 py-4 bg-purple-100 rounded-3xl text-purple-600 font-bold">
+                            <span class="block text-sm uppercase">Dec</span>
+                            <span class="block text-3xl">31</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl serif font-bold mb-1">除夜の鐘</h3>
+                            <p class="text-gray-500 font-medium"><i class="far fa-clock mr-2"></i>12月31日（木） 23：45 〜</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </section>
+    </main>
+
+  <footer class="bg-white/60 backdrop-blur-md mt-24 pt-20 pb-10 px-6 md:px-12 border-t border-purple-100">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div class="col-span-1 md:col-span-2 space-y-8">
+                <div class="flex items-center space-x-4">
+                    <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-12 mix-blend-multiply">
+                    <span class="text-2xl serif font-bold tracking-widest text-wisteria-deep">唱行寺</span>
+                </div>
+                <div class="text-gray-500 leading-relaxed font-medium">
+                    <p>〒272-0802 千葉県市川市柏井町1丁目1696</p>
+                    <p><span class="text-wisteria-deep">TEL: 047-339-1445</span></p>
+                    <p><span class="text-wisteria-deep">FAX: 047-339-1459</span></p>
+                </div>
+                <div class="flex space-x-6 text-3xl text-purple-300">
+                    <a href="https://www.instagram.com/shougyougi_1254nen?igsh=MWptZTk3eGJpNW5rcg==" target="_blank" rel="noopener noreferrer" class="hover:text-purple-600 transition-all duration-300 inline-block hover:scale-110"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-purple-600 transition hover:scale-110"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">メニュー</h4>
+                <ul class="space-y-4 text-gray-500 font-medium">
+                    <li><a href="/" class="hover:text-purple-600 transition">トップ</a></li>
+                    <li><a href="/news/" class="hover:text-purple-600 transition">お知らせ</a></li>
+                    <li><a href="/history/" class="hover:text-purple-600 transition">歴史</a></li>
+                    <li><a href="/access/" class="hover:text-purple-600 transition">アクセス</a></li>
+                    <li><a href="/event/" class="hover:text-purple-600 transition">年中行事予定</a></li>
+                    <li><a href="/engi/" class="hover:text-purple-600 transition">縁起</a></li>
+                    <li><a href="/pet/" class="hover:text-purple-600 transition">ペット供養のご案内</a></li>
+                    <li><a href="/privacy/" class="hover:text-purple-600 transition">個人情報保護方針</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">アクセス</h4>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 font-medium">JR船橋法典駅 徒歩15分<br>無料駐車場完備（30台）</p>
+                <a href="/access/" class="text-purple-600 font-bold border-b border-purple-200 hover:border-purple-600 transition pb-1">地図を確認する</a>
+            </div>
+        </div>
+        <div class="text-center text-xs text-purple-300 tracking-widest border-t border-purple-50 pt-10">© 2026 Nichirenshu Kontouzan Shogyoji.</div>
+    </footer>
+
+    <script>
+        /* 背景アニメーション logic は全ページ共通 (オリジナル完全復元) */
+        function checkFadeIn() {
+            const elements = document.querySelectorAll('.fade-in-up');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            elements.forEach(el => observer.observe(el));
+        }
+        window.addEventListener('DOMContentLoaded', checkFadeIn);
+
+        let scene, camera, renderer, petals = [];
+        const petalCount = 80;
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            const petalShape = new THREE.Shape();
+            petalShape.moveTo(0, 0);
+            petalShape.bezierCurveTo(0.08, 0.08, 0.12, 0.25, 0, 0.4);
+            petalShape.bezierCurveTo(-0.12, 0.25, -0.08, 0.08, 0, 0);
+
+            const petalGeometry = new THREE.ShapeGeometry(petalShape);
+            const petalMaterial = new THREE.MeshBasicMaterial({ color: 0xd8b4fe, transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+
+            for (let i = 0; i < petalCount; i++) {
+                const petal = new THREE.Mesh(petalGeometry, petalMaterial);
+                resetPetal(petal);
+                petal.position.y = Math.random() * 10 - 5;
+                scene.add(petal);
+                petals.push(petal);
+            }
+            camera.position.z = 5;
+            animateThree();
+        }
+
+        function resetPetal(petal) {
+            petal.position.x = (Math.random() - 0.5) * 12;
+            petal.position.y = 6 + Math.random() * 5;
+            petal.position.z = (Math.random() - 0.5) * 8;
+            petal.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+            petal.userData.speed = 0.003 + Math.random() * 0.008;
+            petal.userData.rotSpeed = (Math.random() - 0.5) * 0.008;
+            petal.userData.drift = (Math.random() - 0.5) * 0.004;
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            petals.forEach(petal => {
+                petal.position.y -= petal.userData.speed;
+                petal.position.x += petal.userData.drift + Math.sin(petal.position.y * 0.3) * 0.002;
+                petal.rotation.x += petal.userData.rotSpeed;
+                petal.rotation.y += petal.userData.rotSpeed;
+                if (petal.position.y < -6) resetPetal(petal);
+            });
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        initThree();
+    </script>
+</body>
+</html>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日蓮宗 今島山 唱行寺 | 千葉県市川市 太鼓の霊場 藤の花の寺</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --wisteria-light: #f3f0ff;
+            --wisteria-soft: #e9d5ff;
+            --wisteria-main: #a891d9;
+            --wisteria-deep: #6b4c9a;
+            --text-main: #2d263d;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #fdfbff 0%, #f3f0ff 100%);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .serif {
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        /* Opening Animation */
+        #site-loader {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 2s ease, visibility 5s;
+        }
+
+        #site-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 200px;
+            animation: pulseFade 5s ease-in-out infinite;
+        }
+
+        @keyframes pulseFade {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0.9);
+                filter: blur(5px);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(168, 145, 217, 0.1);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        /* News Ticker */
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            padding-bottom: 2.5rem;
+        }
+
+        .ticker {
+            display: flex;
+            white-space: nowrap;
+            animation: tickerScroll 20s linear infinite;
+        }
+
+        .ticker:hover {
+            animation-play-state: paused;
+        }
+
+        .ticker-card {
+            display: inline-flex;
+            flex-direction: column;
+            min-width: 320px;
+            margin: 0 1.5rem;
+            padding: 1.5rem 2rem;
+            white-space: normal;
+        }
+
+        @keyframes tickerScroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Three.js Canvas */
+        #hero-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Hover Interactions */
+        .btn-hover {
+            transition: all 0.4s ease;
+            position: relative;
+            background: white;
+            color: var(--wisteria-deep);
+            border: 1px solid var(--wisteria-main);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            background: var(--wisteria-main);
+            color: white !important;
+            box-shadow: 0 10px 20px rgba(168, 145, 217, 0.3);
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--text-main);
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--wisteria-deep);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--wisteria-main);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 1.2s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .hero-text-shadow {
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Opening Loader -->
+
+    <div id="site-loader">
+
+        <div class="flex flex-col items-center justify-center">
+
+            <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ"
+                class="loader-logo mb-8 mix-blend-multiply">
+
+
+
+            <p class="serif tracking-[0.5em] text-wisteria-deep opacity-70 ml-[0.5em] whitespace-nowrap">
+
+                日蓮宗 今島山 唱行寺
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <canvas id="hero-canvas"></canvas>
+
+    <nav class="glass-nav fixed top-0 w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center">
+        <a href="/" class="flex items-center space-x-3">
+            <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-10 md:h-12 mix-blend-multiply">
+            <div class="leading-tight">
+                <span class="block text-lg md:text-xl font-bold tracking-widest serif">日蓮宗 今島山 唱行寺</span>
+                <span class="block text-xs tracking-widest opacity-60">Nichirenshu Kontouzan Shogyoji</span>
+            </div>
+        </a>
+        <div class="hidden lg:flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link">トップ</a>
+            <a href="/news/" class="nav-link">お知らせ</a>
+            <a href="/history/" class="nav-link">歴史</a>
+            <a href="/access/" class="nav-link">アクセス</a>
+            <a href="/event/" class="nav-link">年間行事</a>
+            <a href="/contact/"
+                class="nav-link px-6 py-2 border border-purple-300 rounded-full hover:bg-purple-50 transition">お問い合わせ</a>
+        </div>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="メニューを開く"
+            class="lg:hidden text-2xl text-wisteria-deep relative z-50"><i class="fas fa-bars"></i></button>
+        <div id="mobile-menu"
+            class="hidden lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md border-t border-purple-100 shadow-lg flex-col text-center text-sm font-medium uppercase tracking-widest">
+            <a href="/" class="nav-link block px-6 py-4 border-b border-purple-50">トップ</a>
+            <a href="/news/" class="nav-link block px-6 py-4 border-b border-purple-50">お知らせ</a>
+            <a href="/history/" class="nav-link block px-6 py-4 border-b border-purple-50">歴史</a>
+            <a href="/access/" class="nav-link block px-6 py-4 border-b border-purple-50">アクセス</a>
+            <a href="/event/" class="nav-link block px-6 py-4 border-b border-purple-50">年間行事</a>
+            <a href="/contact/" class="nav-link block px-6 py-4 text-wisteria-deep font-bold">お問い合わせ</a>
+        </div>
+    </nav>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.querySelector('#mobile-menu-btn i');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+    </script>
+
+    <main class="pt-24 min-h-screen">
+
+        <!-- TOP PAGE -->
+        <section id="page-top" class="tab-content active">
+            <!-- Hero -->
+            <div class="px-6 md:px-12 py-12">
+                <div class="max-w-7xl mx-auto min-h-[70vh] flex flex-col justify-center items-start relative">
+                    <div class="fade-in-up hero-text-shadow">
+                        <h2 class="text-wisteria-deep serif text-2xl md:text-4xl mb-4">藤が紡ぐ、安らぎの時。</h2>
+
+                        <h1 class="text-5xl md:text-8xl font-bold serif leading-tight mb-8">
+                            日蓮宗
+                            <span class="relative inline-block">
+                                唱行寺
+                                <div
+                                    class="absolute -top-4 -right-8 md:-top-8 md:-right-16 w-32 md:w-64 h-auto opacity-20 -z-10 pointer-events-none transform rotate-12">
+                                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M100,20 C120,40 110,60 130,80 C150,100 140,130 120,150 C100,170 80,150 60,130 C40,110 50,80 70,60 C90,40 80,20 100,20"
+                                            fill="#8A2BE2" />
+                                        <path d="M110,30 C130,50 120,70 140,90 C160,110 150,140 130,160" fill="#9370DB"
+                                            opacity="0.6" />
+                                        <path d="M90,10 C70,5 50,15 45,35 C40,55 55,70 75,65" fill="#4F7942" />
+                                        <path d="M110,10 C130,5 150,15 155,35 C160,55 145,70 125,65" fill="#4F7942" />
+                                    </svg>
+                                </div>
+                            </span>
+                            <br>
+                            <span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-600"></span>
+                        </h1>
+
+                        <p class="max-w-4xl text-lg text-gray-700 leading-relaxed mb-10">
+                            千葉県市川市の地に歴史を刻み、春には美しい藤の花が境内を彩ります。<br>
+                            「太鼓の霊場」とも称される静寂の中で、心穏やかなひとときをお過ごしください。
+                        </p>
+
+                        <div class="flex flex-wrap gap-4">
+                            <a href="/history/"
+                                class="btn-hover px-10 py-4 rounded-full text-lg tracking-widest serif shadow-sm">
+                                お寺を知る
+                            </a>
+                            <a href="/event/"
+                                class="btn-hover px-10 py-4 rounded-full text-lg tracking-widest serif shadow-sm">
+                                行事案内
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- News Ticker Section -->
+            <div class="max-w-7xl mx-auto px-6 md:px-12 mt-10">
+                <h3 class="text-2xl serif mb-4 border-l-4 border-purple-300 pl-4 text-wisteria-deep fade-in-up">お知らせ
+                </h3>
+            </div>
+
+            <div class="ticker-wrap">
+                <div class="ticker">
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">2026.04.01 [行事]</span>
+                        <h4 class="font-bold text-wisteria-deep">【5月12日（火）11：00】御守護神大祭のご案内。一年の加護と家内安全・災難消除を祈願する特別な法要です。
+                        </h4>
+                    </div>
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">2026.3.17 [お知らせ]</span>
+                        <h4 class="font-bold text-wisteria-deep">ホームページをリニューアルいたしました。</h4>
+                    </div>
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">2025.04.20 [見頃]</span>
+                        <h4 class="font-bold text-wisteria-deep">境内の藤の花が満開です。5月上旬までライトアップも。</h4>
+                    </div>
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">2025.03.01 [行事]</span>
+                        <h4 class="font-bold text-wisteria-deep">春季彼岸法要会は3月23日14時より執り行います。</h4>
+                    </div>
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">文化財案内</span>
+                        <h4 class="font-bold text-wisteria-deep">市川市指定有形文化財「木彫日蓮坐像」を安置。</h4>
+                    </div>
+                    <!-- Duplicate for loop -->
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">2025.10.15 [お知らせ]</span>
+                        <h4 class="font-bold text-wisteria-deep">ホームページをリリースいたしました。</h4>
+                    </div>
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">2025.04.20 [見頃]</span>
+                        <h4 class="font-bold text-wisteria-deep">境内の藤の花が満開です。5月上旬までライトアップも。</h4>
+                    </div>
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">2025.03.01 [行事]</span>
+                        <h4 class="font-bold text-wisteria-deep">春季彼岸法要会は3月23日14時より執り行います。</h4>
+                    </div>
+                    <div class="ticker-card glass-card">
+                        <span class="text-xs text-purple-400 font-bold mb-2">文化財案内</span>
+                        <h4 class="font-bold text-wisteria-deep">市川市指定有形文化財「木彫日蓮坐像」を安置。</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-12 mt-24 mb-10">
+                <h3 class="text-3xl md:text-4xl serif mb-2 text-wisteria-deep fade-in-up text-center">唱行寺で出来ること</h3>
+                <p class="text-center text-gray-500 mb-12 fade-in-up serif tracking-widest"></p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div
+                        class="fade-in-up glass-card p-8 flex flex-col justify-between hover:bg-white/60 transition group">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-6 text-purple-500 group-hover:scale-110 transition">
+                                <i class="fas fa-hands-praying text-xl"></i>
+                            </div>
+                            <h4 class="text-2xl serif font-bold mb-4 text-wisteria-deep">葬儀</h4>
+                            <p class="text-gray-600 leading-relaxed mb-6">
+                                最後のお見送りを、まごころを込めて執り行います。形式に捉われず、故人様とのお別れの時間を大切にします。</p>
+                        </div>
+                        <div class="border-t border-purple-50 pt-4">
+                            <p class="text-xs text-gray-400 mb-1">まずはお電話でご相談ください</p>
+                            <a href="tel:0473391445"
+                                class="text-lg font-bold text-purple-500 hover:text-purple-700 transition flex items-center">
+                                <i class="fas fa-phone-alt mr-2 text-sm"></i>047-339-1445
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-up glass-card p-8 flex flex-col justify-between hover:bg-white/60 transition group"
+                        style="transition-delay: 0.1s">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-6 text-purple-500 group-hover:scale-110 transition">
+                                <i class="fas fa-dharmachakra text-xl"></i>
+                            </div>
+                            <h4 class="text-2xl serif font-bold mb-4 text-wisteria-deep">法事</h4>
+                            <p class="text-gray-600 leading-relaxed mb-6">
+                                回忌法要など、ご先祖様を供養する大切なひとときを。本堂での法要のほか、客殿での会食も可能です。</p>
+                        </div>
+                        <div class="border-t border-purple-50 pt-4">
+                            <p class="text-xs text-gray-400 mb-1">まずはお電話でご相談ください</p>
+                            <a href="tel:0473391445"
+                                class="text-lg font-bold text-purple-500 hover:text-purple-700 transition flex items-center">
+                                <i class="fas fa-phone-alt mr-2 text-sm"></i>047-339-1445
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-up glass-card p-8 flex flex-col justify-between hover:bg-white/60 transition group"
+                        style="transition-delay: 0.2s">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-6 text-purple-500 group-hover:scale-110 transition">
+                                <i class="fas fa-infinity text-xl"></i>
+                            </div>
+                            <h4 class="text-2xl serif font-bold mb-4 text-wisteria-deep">永代供養</h4>
+                            <p class="text-gray-600 leading-relaxed mb-6">後継者にお悩みの方もご安心ください。お寺が責任を持って、永代にわたり供養・管理をいたします。
+                            </p>
+                        </div>
+                        <div class="border-t border-purple-50 pt-4">
+                            <p class="text-xs text-gray-400 mb-1">まずはお電話でご相談ください</p>
+                            <a href="tel:0473391445"
+                                class="text-lg font-bold text-purple-500 hover:text-purple-700 transition flex items-center">
+                                <i class="fas fa-phone-alt mr-2 text-sm"></i>047-339-1445
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-up glass-card p-8 flex flex-col justify-between border-2 border-purple-200 bg-purple-50/30 hover:bg-white/80 transition group"
+                        style="transition-delay: 0.3s">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-6 text-purple-500 shadow-sm group-hover:scale-110 transition">
+                                <i class="fas fa-paw text-xl"></i>
+                            </div>
+                            <h4 class="text-2xl serif font-bold mb-4 text-wisteria-deep">ペット供養</h4>
+                            <p class="text-gray-600 leading-relaxed mb-6">家族の一員である大切なペットの供養を承ります。専用の合祀墓にて安らかな眠りを守ります。
+                            </p>
+                        </div>
+                        <div class="pt-4 space-y-4">
+                            <a href="tel:0473391445"
+                                class="text-lg font-bold text-purple-500 hover:text-purple-700 transition flex items-center justify-center bg-white py-2 rounded-xl shadow-sm">
+                                <i class="fas fa-phone-alt mr-2 text-sm"></i>047-339-1445
+                            </a>
+
+                            <a href="/pet/"
+                                class="btn-hover w-full py-3 rounded-full text-sm font-bold tracking-widest serif flex items-center justify-center">
+                                ペット供養について詳しく
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-up glass-card p-8 flex flex-col justify-between hover:bg-white/60 transition group"
+                        style="transition-delay: 0.4s">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-6 text-purple-500 group-hover:scale-110 transition">
+                                <i class="fas fa-monument text-xl"></i>
+                            </div>
+                            <h4 class="text-2xl serif font-bold mb-4 text-wisteria-deep">墓地</h4>
+                            <p class="text-gray-600 leading-relaxed mb-6">
+                                緑豊かな静寂に包まれた墓地をご案内いたします。交通の便も良く、いつでもお気軽にお参りいただけます。</p>
+                        </div>
+                        <div class="border-t border-purple-50 pt-4">
+                            <p class="text-xs text-gray-400 mb-1">まずはお電話でご相談ください</p>
+                            <a href="tel:0473391445"
+                                class="text-lg font-bold text-purple-500 hover:text-purple-700 transition flex items-center">
+                                <i class="fas fa-phone-alt mr-2 text-sm"></i>047-339-1445
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-up glass-card p-8 flex flex-col justify-between hover:bg-white/60 transition group"
+                        style="transition-delay: 0.5s">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-6 text-purple-500 group-hover:scale-110 transition">
+                                <i class="fas fa-fire-alt text-xl"></i>
+                            </div>
+                            <h4 class="text-2xl serif font-bold mb-4 text-wisteria-deep">お焚き上げ</h4>
+                            <p class="text-gray-600 leading-relaxed mb-6">
+                                大切にされていた御札、お守り、遺品などを、感謝の念とともに供養し、火でお清めいたします。
+                            </p>
+                        </div>
+                        <div class="border-t border-purple-50 pt-4">
+                            <p class="text-[10px] text-red-400 font-bold mb-1 leading-tight flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>お引受けできる品目には限りがございます
+                            </p>
+                            <p class="text-xs text-gray-400 mb-1">事前にお電話でご相談ください</p>
+                            <a href="tel:0473391445"
+                                class="text-lg font-bold text-purple-500 hover:text-purple-700 transition flex items-center">
+                                <i class="fas fa-phone-alt mr-2 text-sm"></i>047-339-1445
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intro Photos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-7xl mx-auto mt-20 px-6 md:px-12">
+                <div class="fade-in-up glass-card p-4 overflow-hidden group">
+                    <div class="overflow-hidden rounded-xl h-96">
+                        <img src="https://i.ibb.co/yF9hTFzh/kashiwai-shogyo2.jpg" alt="本堂"
+                            class="w-full h-full object-cover transition duration-1000 group-hover:scale-105">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="serif text-3xl mb-3 text-wisteria-deep">本堂</h3>
+                        <p class="opacity-70 leading-relaxed">日蓮大聖人ゆかりの「太鼓の霊場」として、題目の響きが絶えない神聖な空間です。</p>
+                    </div>
+                </div>
+                <div class="fade-in-up glass-card p-4 overflow-hidden group" style="transition-delay: 0.2s">
+                    <div class="overflow-hidden rounded-xl h-96">
+                        <img src="https://i.ibb.co/5gndzNL6/kashiwai-shogyo3.jpg" alt="鐘楼"
+                            class="w-full h-full object-cover transition duration-1000 group-hover:scale-105">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="serif text-3xl mb-3 text-wisteria-deep">鐘楼</h3>
+                        <p class="opacity-70 leading-relaxed">大晦日には除夜の鐘をつき、多くの方が参拝に訪れ、境内は賑わいを見せます。</p>
+                        <div class="mt-5 flex items-start gap-3 bg-purple-50/70 border border-purple-100 rounded-xl px-4 py-3">
+                            <i class="fas fa-circle-info text-purple-400 mt-0.5"></i>
+                            <p class="text-xs md:text-sm text-gray-500 leading-relaxed">
+                                一般の方の鐘つきは<span class="text-purple-500 font-bold">12月31日限定</span>となっております。それ以外の日はご遠慮いただいております。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center w-full mt-16 mb-20 fade-in-up">
+                <a href="/history/"
+                    class="btn-hover px-10 py-4 rounded-full text-lg tracking-widest serif shadow-sm inline-block text-center">
+                    唱行寺をもっと知る →
+                </a>
+            </div>
+
+            <!-- Priest Section -->
+            <div class="max-w-5xl mx-auto py-24 px-6 text-center">
+                <div class="fade-in-up">
+                    <img src="https://i.ibb.co/mCn4GM3S/S-53837835.jpg" alt="加藤英晋住職"
+                        class="w-48 h-48 rounded-full mx-auto mb-8 object-cover border-4 border-white shadow-xl">
+                    <h3 class="serif text-3xl mb-6">第五十四世 住職よりご挨拶</h3>
+                    <p class="text-gray-600 mb-10 max-w-2xl mx-auto italic leading-relaxed">
+                        「唱行寺は、単なる儀式の場ではなく、皆様の心が安らぎ、再び歩み出すための拠り所でありたいと考えております。」
+                    </p>
+
+                    <a href="/engi/"
+                        class="btn-hover px-10 py-4 rounded-full text-lg tracking-widest serif shadow-sm inline-block text-center">
+                        「縁起」
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white/60 backdrop-blur-md mt-24 pt-20 pb-10 px-6 md:px-12 border-t border-purple-100">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div class="col-span-1 md:col-span-2 space-y-8">
+                <div class="flex items-center space-x-4">
+                    <img src="https://i.ibb.co/tT9ZsmKz/S-384319490.jpg" alt="唱行寺 ロゴ" class="h-12 mix-blend-multiply">
+                    <span class="text-2xl serif font-bold tracking-widest text-wisteria-deep">唱行寺</span>
+                </div>
+                <div class="text-gray-500 leading-relaxed font-medium">
+                    <p>〒272-0802 千葉県市川市柏井町1丁目1696</p>
+                    <p><span class="text-wisteria-deep">TEL: 047-339-1445</span></p>
+                    <p><span class="text-wisteria-deep">FAX: 047-339-1459</span></p>
+                </div>
+                <div class="flex space-x-6 text-3xl text-purple-300">
+                    <a href="https://www.instagram.com/shougyougi_1254nen?igsh=MWptZTk3eGJpNW5rcg==" target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:text-purple-600 transition-all duration-300 inline-block hover:scale-110"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-purple-600 transition hover:scale-110"><i
+                            class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">メニュー</h4>
+                <ul class="space-y-4 text-gray-500 font-medium">
+                    <li><a href="/" class="hover:text-purple-600 transition">トップ</a></li>
+                    <li><a href="/news/" class="hover:text-purple-600 transition">お知らせ</a></li>
+                    <li><a href="/history/" class="hover:text-purple-600 transition">歴史</a></li>
+                    <li><a href="/access/" class="hover:text-purple-600 transition">アクセス</a></li>
+                    <li><a href="/event/" class="hover:text-purple-600 transition">年中行事予定</a></li>
+                    <li><a href="/engi/" class="hover:text-purple-600 transition">縁起</a></li>
+                    <li><a href="/pet/" class="hover:text-purple-600 transition">ペット供養のご案内</a></li>
+                    <li><a href="/privacy/" class="hover:text-purple-600 transition">個人情報保護方針</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold serif mb-8 text-wisteria-deep">アクセス</h4>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 font-medium">JR船橋法典駅 徒歩15分<br>無料駐車場完備（30台）</p>
+                <a href="/access/"
+                    class="text-purple-600 font-bold border-b border-purple-200 hover:border-purple-600 transition pb-1">地図を確認する</a>
+            </div>
+        </div>
+        <div class="text-center text-xs text-purple-300 tracking-widest border-t border-purple-50 pt-10">© 2026
+            Nichirenshu Kontouzan Shogyoji.</div>
+    </footer>
+
+    <script>
+        // Loader Control (初回のみ実行し、2回目以降はスキップ)
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('site-loader');
+
+            // ブラウザに「訪問済み」の記録があるか確認
+            if (sessionStorage.getItem('openingFinished')) {
+                // 【2回目以降】アニメーションを飛ばして即表示
+                loader.style.display = 'none'; // ローダーを物理的に消す
+                document.body.classList.remove('overflow-hidden'); // スクロール禁止を解除
+            } else {
+                // 【初回】5秒間アニメーションを見せてから、記録を残す
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                    // 「見たよ」というフラグを保存（ブラウザを閉じるまで有効）
+                    sessionStorage.setItem('openingFinished', 'true');
+                }, 5000);
+            }
+        });
+
+        function showPage(pageId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            checkFadeIn();
+        }
+
+        function checkFadeIn() {
+            const elements = document.querySelectorAll('.fade-in-up');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            elements.forEach(el => observer.observe(el));
+        }
+
+        window.addEventListener('scroll', checkFadeIn);
+
+        let scene, camera, renderer, petals = [];
+        const petalCount = 80;
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({
+                canvas: document.getElementById('hero-canvas'),
+                alpha: true,
+                antialias: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // 花びらの形状定義
+            const petalShape = new THREE.Shape();
+            petalShape.moveTo(0, 0);
+            petalShape.bezierCurveTo(0.08, 0.08, 0.12, 0.25, 0, 0.4);
+            petalShape.bezierCurveTo(-0.12, 0.25, -0.08, 0.08, 0, 0);
+
+            const petalGeometry = new THREE.ShapeGeometry(petalShape);
+            const petalMaterial = new THREE.MeshBasicMaterial({
+                color: 0xd8b4fe,
+                transparent: true,
+                opacity: 0.35,
+                side: THREE.DoubleSide
+            });
+
+            for (let i = 0; i < petalCount; i++) {
+                const petal = new THREE.Mesh(petalGeometry, petalMaterial);
+                resetPetal(petal);
+                petal.position.y = Math.random() * 10 - 5;
+                scene.add(petal);
+                petals.push(petal);
+            }
+
+            camera.position.z = 5;
+            animateThree();
+        }
+
+        function resetPetal(petal) {
+            petal.position.x = (Math.random() - 0.5) * 12;
+            petal.position.y = 6 + Math.random() * 5;
+            petal.position.z = (Math.random() - 0.5) * 8;
+            petal.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+            petal.userData.speed = 0.003 + Math.random() * 0.008;
+            petal.userData.rotSpeed = (Math.random() - 0.5) * 0.008;
+            petal.userData.drift = (Math.random() - 0.5) * 0.004;
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            petals.forEach(petal => {
+                petal.position.y -= petal.userData.speed;
+                petal.position.x += petal.userData.drift + Math.sin(petal.position.y * 0.3) * 0.002;
+                petal.rotation.x += petal.userData.rotSpeed;
+                petal.rotation.y += petal.userData.rotSpeed;
+                if (petal.position.y < -6) resetPetal(petal);
+            });
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        initThree();
+    </script>
+</body>
+
+</html>
