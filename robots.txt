@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kontouzan-shougyouji.jp/sitemap.xml
